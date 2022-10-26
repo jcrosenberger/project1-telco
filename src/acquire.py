@@ -17,7 +17,7 @@ import numpy as np
 import os
 
 #required for acquire
-from src.env import get_db_url as get_db_url
+import src.env as env
 
 # turn off pink warning boxes
 import warnings
@@ -51,7 +51,7 @@ def new_telco_data():
                 
     
     # Read in DataFrame from Codeup db.
-    df = pd.read_sql(sql_query, get_db_url('telco_churn'))
+    df = pd.read_sql(sql_query, env.get_db_url('telco_churn'))
     
     return df
 
