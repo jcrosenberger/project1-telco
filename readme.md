@@ -14,7 +14,8 @@
 ### Hypothesis from theory:
 - tenure will have negative correlation with churning (longer a customer, less likely to leave)
 - contract types will have different effects on churning. I'm not sure which will positively correlate or negatively correlate to churning
-- 
+- price will have a positive correlation with churning (the higher the price, the more likely a person is to leave)
+- I suspect though, that a longer tenure will have a moderating effect on price. That is to say, if we control for tenure, price will show to have more extreme effects on customers who have shorter tenures and it will have a smaller impact on customers who have longer tenures with the telco firm. 
 
 
 
@@ -29,5 +30,5 @@
 
     url = f'mysql+pymysql://{user}:{password}@{host}/{df}'
     return url 
-    >>
+    
 - Additionally in the env.py module, user, password, and host must be defined for the function to work properly

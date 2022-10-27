@@ -20,7 +20,7 @@ def helper():
     pass_into_model_telco_data = 'x_train, y_train, x_validate, y_validate, x_test, y_test = model_telco_data(df)'
     list_of_main_functions = [pass_into_prep_telco_data, pass_into_model_telco_data]
     
-    print('Main functions:\n',*list_of_main_functions, sep = '\n\n')
+    print('Main functions:',*list_of_main_functions, sep = '\n\n')
 
 
 ####################################################################################
@@ -93,37 +93,57 @@ def model_telco_data(df):
     '''
     # Drop duplicate columns
     df.drop(columns=['payment_type_id', 'internet_service_type_id', 'contract_type_id', 'customer_id'], inplace=True)
-       
+
     # Drop null values stored as whitespace    
     df['total_charges'] = df['total_charges'].str.strip()
     df = df[df.total_charges != '']
-    
+
     # Convert to correct datatype
     df['total_charges'] = df.total_charges.astype(float)
-    
+
     # Convert binary categorical variables to numeric
-    df['gender_encoded'] = df.gender.map({'Female': 1, 'Male': 0})
-    df['partner_encoded'] = df.partner.map({'Yes': 1, 'No': 0})
-    df['dependents_encoded'] = df.dependents.map({'Yes': 1, 'No': 0})
-    df['phone_service_encoded'] = df.phone_service.map({'Yes': 1, 'No': 0})
-    df['paperless_billing_encoded'] = df.paperless_billing.map({'Yes': 1, 'No': 0})
-    df['churn_encoded'] = df.churn.map({'Yes': 1, 'No': 0})
-    
+    df['is_female'] = df.gender.map({'Female': 1, 'Male': 0})
+    df['has_partner'] = df.partner.map({'Yes': 1, 'No': 0})
+    df['has_dependents'] = df.dependents.map({'Yes': 1, 'No': 0})
+    df['has_phone_service'] = df.phone_service.map({'Yes': 1, 'No': 0})
+    df['has_paperless_billing'] = df.paperless_billing.map({'Yes': 1, 'No': 0})
+    df['did_churn'] = df.churn.map({'Yes': 1, 'No': 0})
+
     # Get dummies for non-binary categorical variables
     dummy_df = pd.get_dummies(df[['multiple_lines', \
-                              'online_security', \
-                              'online_backup', \
-                              'device_protection', \
-                              'tech_support', \
-                              'streaming_tv', \
-                              'streaming_movies', \
-                              'contract_type', \
-                              'internet_service_type', \
-                              'payment_type']], dummy_na=False, \
-                              drop_first=True)
+                            'online_security', \
+                            'online_backup', \
+                            'device_protection', \
+                            'tech_support', \
+                            'streaming_tv', \
+                            'streaming_movies', \
+                            'contract_type', \
+                            'internet_service_type', \
+                            'payment_type']], dummy_na=False, \
+                            drop_first=True)
     
-    # Concatenate dummy dataframe to original 
-    df = pd.concat([df, dummy_df], axis=1)
+    # Joins original dataframe with newly constructed dataframe using converted dummy variables
+    df = pd.concat([df, dummy_df], axis = 1)
+
+    # Creates dummy variables for customers based on which quartile their monthly charges fit
+    df['charges_lower_quartile'] = df.monthly_charges <= df.monthly_charges.quantile(.25)
+    df['charges_higher_quartile'] = df.monthly_charges >= df.monthly_charges.quantile(.75)
+    dummy_df['mid_charge1'] = df.monthly_charges < df.monthly_charges.quantile(.75)
+    dummy_df['mid_charge2'] = df.monthly_charges > df.monthly_charges.quantile(.25)
+    df['mid_charge'] = dummy_df['mid_charge1'] == dummy_df['mid_charge2']
+
+
+
+
+
+    #Drops variables which have had binary variables created to represent for machine learning 
+    df = df.drop(columns=['gender', 'partner', 'dependents', 'phone_service', 'paperless_billing',
+                        'multiple_lines', 'online_security', 'online_backup', 'device_protection', 
+                        'tech_support', 'streaming_tv', 'streaming_movies', 'contract_type', 
+                        'internet_service_type', 'payment_type', 'churn'])
+
+    #Drops variables unused for models
+    df = df.drop(columns=['monthly_charges', 'total_charges'])
     
     # uses split_telco_data function to develop and return train, validate, and test variables
     train, validate, test = split_telco_data(df)
