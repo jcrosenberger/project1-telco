@@ -47,12 +47,13 @@ def prep_telco_data(df):
     df['total_charges'] = df.total_charges.astype(float)
     
     # Convert binary categorical variables to numeric
-    df['gender_encoded'] = df.gender.map({'Female': 1, 'Male': 0})
-    df['partner_encoded'] = df.partner.map({'Yes': 1, 'No': 0})
-    df['dependents_encoded'] = df.dependents.map({'Yes': 1, 'No': 0})
-    df['phone_service_encoded'] = df.phone_service.map({'Yes': 1, 'No': 0})
-    df['paperless_billing_encoded'] = df.paperless_billing.map({'Yes': 1, 'No': 0})
-    df['churn_encoded'] = df.churn.map({'Yes': 1, 'No': 0})
+    df['is_female'] = df.gender.map({'Female': 1, 'Male': 0})
+    df['has_partner'] = df.partner.map({'Yes': 1, 'No': 0})
+    df['has_dependents'] = df.dependents.map({'Yes': 1, 'No': 0})
+    df['has_phone_service'] = df.phone_service.map({'Yes': 1, 'No': 0})
+    df['has_paperless_billing'] = df.paperless_billing.map({'Yes': 1, 'No': 0})
+    df['did_churn'] = df.churn.map({'Yes': 1, 'No': 0})
+    
     
     # Get dummies for non-binary categorical variables
     dummy_df = pd.get_dummies(df[['multiple_lines', \
@@ -74,7 +75,7 @@ def prep_telco_data(df):
     train, validate, test = split_telco_data(df)
     
 
-    return x_train, y_train, x_validate, y_validate, x_test, y_test 
+    #return x_train, y_train, x_validate, y_validate, x_test, y_test 
     return train, validate, test
 
 
@@ -166,10 +167,10 @@ def split_telco_data(df):
     '''
     train_validate, test = train_test_split(df, test_size=.2, 
                                         random_state = 7, 
-                                        stratify=df.churn)
+                                        stratify=df.did_churn)
     train, validate = train_test_split(train_validate, test_size=.3, 
                                    random_state = 7, 
-                                   stratify=train_validate.churn)
+                                   stratify=train_validate.did_churn)
     return train, validate, test
 
 
@@ -183,13 +184,13 @@ def model(train, validate, test):
     the y outcome. The other group will know the y outcome and will be used to verify
     the model we create '''
 
-    x_train = train.drop(columns=['churn'])
-    y_train = train.churn
+    x_train = train.drop(columns=['did_churn'])
+    y_train = train.did_churn
 
-    x_validate = validate.drop(columns=['churn'])
-    y_validate = validate.churn
+    x_validate = validate.drop(columns=['did_churn'])
+    y_validate = validate.did_churn
 
-    x_test = test.drop(columns=['churn'])
-    y_test = test.churn
+    x_test = test.drop(columns=['did_churn'])
+    y_test = test.did_churn
 
     return x_train, y_train, x_validate, y_validate, x_test, y_test 
