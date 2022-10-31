@@ -18,6 +18,12 @@
 - I suspect though, that a longer tenure will have a moderating effect on price. That is to say, if we control for tenure, price will show to have more extreme effects on customers who have shorter tenures and it will have a smaller impact on customers who have longer tenures with the telco firm. 
 
 
+## Dictionary of key features in data:
+>> churn - Customers who left telco  
+>> tenure - The duration a customer stayed with telco in the 6 year window  
+>> monthly_charges - the amount charged to the customer for services which telco provided  
+
+>> Several other desciptive features per customer remain in the dataset but they are not theoretically important for our model
 
 
 ## How to reproduce:
