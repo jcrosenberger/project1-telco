@@ -260,7 +260,7 @@ def knn7_model(x_train, y_train, x_test, y_test):
 
 
 def models_bar(vars):
-    "get graph of baseline rating"
+    "get graph of model accuracy situated next to baseline rating"
 
     # assign values and labels
     labels = ['Baseline', 'Decision Tree', 'KNN7', 'KNN10']
@@ -269,5 +269,18 @@ def models_bar(vars):
     # generate and display graph
     plt.bar(labels, models, color=['#ffc3a0', '#c0d6e4'])
     plt.title('Chosen Models Compared to Baseline')
+    plt.tight_layout()
+    plt.show()
+
+def t_test_bar(vars):
+    "get graph of model accuracy situated next to baseline rating"
+
+    # assign values and labels
+    labels = ['Level for Significance', 'Tenure','Monthly Charges']
+    models = vars
+
+    # generate and display graph
+    plt.bar(labels, models, color=['#ffc3a0', '#c0d6e4'])
+    plt.title('Any amount over 2.015 demonstrates a relationship')
     plt.tight_layout()
     plt.show()
