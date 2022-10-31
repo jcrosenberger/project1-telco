@@ -78,10 +78,10 @@ def baseline(df,var):
     based on the target variable and the dataframe passed in
     '''
     telco = ac.get_telco_data()
-    if (df[var].value_counts(normalize=True))[1] > (df[var].value_counts(normalize=True))[0]:
-        baseline = (df[var].value_counts(normalize=True))[1]
-    else: 
+    if (df[var].value_counts(normalize=True))[0] > (df[var].value_counts(normalize=True))[1]:
         baseline = (df[var].value_counts(normalize=True))[0]
+    else: 
+        baseline = (df[var].value_counts(normalize=True))[1]
     return baseline
 
 #example template for how to call function
@@ -99,7 +99,7 @@ def make_pie(df, var):
     #no  = len(df.var[df.var == 'No'])
     #values = [yes, no]
     values = [len(df[var][df[var] == 'Yes']), len(df[var][df[var] == 'No'])] 
-    labels = ['Did not Churn','Churned', ] 
+    labels = ['Churned','Did not Churn' ] 
 
     # generate and show chart
     plt.pie(values, labels=labels, autopct='%.0f%%', colors=['#ffc3a0', '#c0d6e4'])
