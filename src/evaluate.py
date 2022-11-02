@@ -259,6 +259,7 @@ def knn7_model(x_train, y_train, x_test, y_test):
     return test_predict.T['accuracy'][0]
 
 
+
 def models_bar(vars):
     "get graph of model accuracy situated next to baseline rating"
 
@@ -272,6 +273,8 @@ def models_bar(vars):
     plt.tight_layout()
     plt.show()
 
+
+
 def t_test_bar(vars):
     "get graph of model accuracy situated next to baseline rating"
 
@@ -284,3 +287,41 @@ def t_test_bar(vars):
     plt.title('Any amount over 2.015 demonstrates a relationship')
     plt.tight_layout()
     plt.show()
+
+
+### the money recommendation. How much potential income was left on the table in the previous
+### six month period, without changes to pricing scheme?
+def potential_income():
+
+    # Defining variables using functions in this module
+    df = get_data()
+    train, validate, test, x_train, y_train, x_validate, y_validate, x_test, y_test = pp.model_telco_data(df)
+    knn10 = evaluate.knn10_model(x_train, y_train, x_test, y_test)
+    base = evaluate.baseline(df, 'churn')
+
+    # Figure out about the average number of months a shorter term customer stayed with telco
+    no_churn =df.churn=='No'
+    avg_no_churn_months = df[no_churn]['tenure'].mean()
+
+    # Figure out about the average number of months a longer term customer stayed with telco
+    yes_churn =df.churn=='Yes'
+    avg_yes_churn_months = df[yes_churn]['tenure'].mean()
+
+    # Calculating the number of customers our model predicts could be saved by small
+    # changes in charges
+    potential_non_churn=(len(df[df.churn =='Yes']))*(knn10-base)
+
+    # A reasonable assumption of months that might be added to a non-churn customer
+    extra_months = avg_no_churn_months - avg_yes_churn_months
+
+    # Average charges per month for all customers
+    avg_charges = df['monthly_charges'].mean()
+
+    # A five percent discount on monthly charges
+    discount = 0.05
+
+    # our winning variable. How much money could potentially have been lost?
+    lost_revenue = potential_non_churn * extra_months * avg_charges * (1-discount)
+
+
+    return lost_revenue
