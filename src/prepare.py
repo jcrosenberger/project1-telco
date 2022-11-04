@@ -73,7 +73,13 @@ def prep_telco_data(df):
     
     # uses split_telco_data function to develop and return train, validate, and test variables
     train, validate, test = split_telco_data(df)
-    
+
+
+    # reordering columns in our data lists
+    column_order = [7]+list(range(6))+list(range(8,32))
+    train = train.iloc[:,column_order]
+    validate = validate.iloc[:,column_order]
+    test = test.iloc[:,column_order]
 
     #return x_train, y_train, x_validate, y_validate, x_test, y_test 
     return train, validate, test
@@ -149,6 +155,12 @@ def model_telco_data(df):
     # uses split_telco_data function to develop and return train, validate, and test variables
     train, validate, test = split_telco_data(df)
     
+    # reordering columns in our data lists
+    column_order = [7]+list(range(6))+list(range(8,32))
+    train = train.iloc[:,column_order]
+    validate = validate.iloc[:,column_order]
+    test = test.iloc[:,column_order]
+
     # 
     x_train, y_train, x_validate, y_validate, x_test, y_test = model(train, validate, test)
 
