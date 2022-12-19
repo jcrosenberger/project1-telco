@@ -32,7 +32,7 @@ def get_data():
     return df 
 
 def print_classification_metrics(actuals, predictions):
-    '''A method which allows me to say time and coding space by making the metrics for evaluating 
+    '''A method which allows me to save time and coding space by making the metrics for evaluating 
     a model simple and easy to access. Calculates Accuracy, Precision, Recall, Sensitivity and f1
     '''    
     
